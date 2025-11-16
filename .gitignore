@@ -1,0 +1,52 @@
+# Misc
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.atom/
+.history
+.vscode/
+
+# Flutter / Dart / Pub
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+coverage/
+flutter_*.log
+**/doc/api/
+**/ios/Flutter/.last_build_id
+
+# Android
+android/.gradle/
+android/app/{debug,profile,release}
+*.keystore
+
+# iOS / macOS / Windows / Linux / Web
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/ServiceDefinitions.json
+ios/Runner/GeneratedPluginRegistrant.*
+macos/Flutter/ephemeral/
+*.xcworkspace
+windows/flutter/ephemeral/
+linux/flutter/ephemeral/
+web/.dart_tool/
+
+# Supabase / Env secrets
+lib/core/constants/supabase_config.dart
+supabase/.temp/
+.env
+.env.*
+!.env.example
