@@ -94,7 +94,7 @@ class _LaboratoryDetailScreenNewState
                 hintText: 'Search services...',
                 prefixIcon: const Icon(Iconsax.search_normal),
                 filled: true,
-                fillColor: AppColors.grey.withOpacity(0.1),
+                fillColor: AppColors.grey.withValues(alpha: 0.1),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -115,7 +115,7 @@ class _LaboratoryDetailScreenNewState
   Widget _buildLabInfo() {
     return Container(
       padding: const EdgeInsets.all(16),
-      color: AppColors.primary.withOpacity(0.05),
+      color: AppColors.primary.withValues(alpha: 0.05),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -210,7 +210,7 @@ class _LaboratoryDetailScreenNewState
             Icon(
               searchQuery.isEmpty ? Iconsax.box : Iconsax.search_normal,
               size: 60,
-              color: AppColors.grey.withOpacity(0.5),
+              color: AppColors.grey.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
             Text(
@@ -280,21 +280,20 @@ class _ServiceCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isPreSelected
-              ? AppColors.primary.withOpacity(0.05)
-              : Colors.white,
+          color:
+              isPreSelected ? AppColors.primary.withValues(alpha: 0.05) : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isPreSelected
                 ? AppColors.primary
-                : AppColors.grey.withOpacity(0.2),
+                : AppColors.grey.withValues(alpha: 0.2),
             width: isPreSelected ? 2 : 1,
           ),
           boxShadow: [
             BoxShadow(
               color: isPreSelected
-                  ? AppColors.primary.withOpacity(0.1)
-                  : Colors.black.withOpacity(0.05),
+                  ? AppColors.primary.withValues(alpha: 0.1)
+                  : Colors.black.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -308,7 +307,7 @@ class _ServiceCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.1),
+                    color: AppColors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
@@ -367,7 +366,7 @@ class _ServiceCard extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: AppColors.success.withOpacity(0.1),
+                    color: AppColors.success.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(

@@ -22,11 +22,12 @@ class SavedAddressSelector extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.05),
+            color: AppColors.primary.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color:
-                  selected ? AppColors.primary : AppColors.primary.withOpacity(0.2),
+              color: selected
+                  ? AppColors.primary
+                  : AppColors.primary.withValues(alpha: 0.2),
               width: selected ? 2 : 1,
             ),
           ),

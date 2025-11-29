@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:oncall_lab/core/constants/app_colors.dart';
+import 'package:oncall_lab/core/services/storage_service.dart';
+import 'package:oncall_lab/core/services/supabase_service.dart';
 import 'package:oncall_lab/stores/auth_store.dart';
 import 'package:oncall_lab/ui/auth/widgets/step_progress_bar.dart';
 
@@ -40,6 +44,8 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
   final _registrationNumberController = TextEditingController();
   final _passportNumberController = TextEditingController();
   final _allergiesController = TextEditingController();
+
+  File? _selectedProfilePhoto;
 
   String? _selectedGender;
   bool _isMongolianCitizen = true;
@@ -110,6 +116,31 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
 
     if (!mounted) return;
     if (success) {
+      // Optional profile photo upload after account creation
+      if (_selectedProfilePhoto != null) {
+        try {
+          final userId = authStore.currentUser?.id;
+          if (userId != null) {
+            final url = await StorageService.uploadProfilePhoto(
+              userId: userId,
+              file: _selectedProfilePhoto!,
+            );
+            if (url != null) {
+              await supabase
+                  .from('profiles')
+                  .update({
+                    'avatar_url': url,
+                    'updated_at': DateTime.now().toIso8601String(),
+                  })
+                  .eq('id', userId);
+              await authStore.loadCurrentProfile();
+            }
+          }
+        } catch (_) {
+          // Ignore upload errors here; account is already created
+        }
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Patient account created successfully!'),
@@ -303,14 +334,13 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
           decoration: _buildInputDecoration(
             'Phone number *',
             Icons.phone_outlined,
-            hint: '+976 99123456',
+            hint: '99123456',
           ),
           validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return 'Required';
-            }
-            if (!value.trim().startsWith('+')) {
-              return 'Include country code (e.g. +976)';
+            final v = value?.trim() ?? '';
+            if (v.isEmpty) return 'Required';
+            if (v.length != 8 || int.tryParse(v) == null) {
+              return 'Enter 8 digit number (e.g. 99123456)';
             }
             return null;
           },
@@ -323,6 +353,48 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
             'Email (optional)',
             Icons.email_outlined,
           ),
+        ),
+        const SizedBox(height: 16),
+        const Text(
+          'Profile photo (optional)',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            CircleAvatar(
+              radius: 24,
+              backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+              backgroundImage: _selectedProfilePhoto != null
+                  ? FileImage(_selectedProfilePhoto!)
+                  : null,
+              child: _selectedProfilePhoto == null
+                  ? const Icon(
+                      Icons.camera_alt,
+                      color: AppColors.primary,
+                    )
+                  : null,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: () async {
+                  final file = await StorageService.pickImage();
+                  if (file != null) {
+                    setState(() {
+                      _selectedProfilePhoto = file;
+                    });
+                  }
+                },
+                icon: const Icon(Icons.upload),
+                label: Text(
+                  _selectedProfilePhoto == null
+                      ? 'Upload profile photo'
+                      : 'Change photo',
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -507,7 +579,7 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
         borderRadius: BorderRadius.circular(12),
       ),
       filled: true,
-      fillColor: AppColors.grey.withOpacity(0.05),
+      fillColor: AppColors.grey.withValues(alpha: 0.05),
     );
   }
 }

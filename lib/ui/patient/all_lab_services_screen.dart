@@ -121,10 +121,11 @@ class _AllLabServicesScreenState extends State<AllLabServicesScreen> {
                     : null,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: AppColors.grey.withOpacity(0.3)),
+                  borderSide:
+                      BorderSide(color: AppColors.grey.withValues(alpha: 0.3)),
                 ),
                 filled: true,
-                fillColor: AppColors.grey.withOpacity(0.1),
+                fillColor: AppColors.grey.withValues(alpha: 0.1),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 14,
@@ -219,7 +220,7 @@ class _AllLabServicesScreenState extends State<AllLabServicesScreen> {
               Icon(
                 Iconsax.search_normal,
                 size: 60,
-                color: AppColors.grey.withOpacity(0.5),
+                color: AppColors.grey.withValues(alpha: 0.5),
               ),
               const SizedBox(height: 20),
               Text(
@@ -291,11 +292,11 @@ class _ServiceCard extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: AppColors.grey.withOpacity(0.2),
+              color: AppColors.grey.withValues(alpha: 0.2),
             ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.grey.withOpacity(0.1),
+                color: AppColors.grey.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -309,7 +310,7 @@ class _ServiceCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.1),
+                      color: AppColors.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Icon(
@@ -338,14 +339,14 @@ class _ServiceCard extends StatelessWidget {
                               Icon(
                                 Iconsax.drop,
                                 size: 14,
-                                color: AppColors.grey.withOpacity(0.7),
+                                color: AppColors.grey.withValues(alpha: 0.7),
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 sampleType.toUpperCase(),
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: AppColors.grey.withOpacity(0.7),
+                                  color: AppColors.grey.withValues(alpha: 0.7),
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -379,10 +380,10 @@ class _ServiceCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: AppColors.warning.withOpacity(0.1),
+                    color: AppColors.warning.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: AppColors.warning.withOpacity(0.3),
+                      color: AppColors.warning.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Row(
@@ -390,7 +391,7 @@ class _ServiceCard extends StatelessWidget {
                       Icon(
                         Icons.info_outline,
                         size: 16,
-                        color: AppColors.warning.withOpacity(0.8),
+                        color: AppColors.warning.withValues(alpha: 0.8),
                       ),
                       const SizedBox(width: 8),
                       const Expanded(

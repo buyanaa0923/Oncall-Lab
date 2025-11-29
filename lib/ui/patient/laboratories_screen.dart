@@ -212,7 +212,7 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
           borderRadius: BorderRadius.circular(12),
         ),
         filled: true,
-        fillColor: AppColors.grey.withOpacity(0.1),
+        fillColor: AppColors.grey.withValues(alpha: 0.1),
       ),
     );
   }
@@ -239,7 +239,7 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.grey.withOpacity(0.1),
+        color: AppColors.grey.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -298,7 +298,7 @@ class _LaboratoryCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -308,7 +308,7 @@ class _LaboratoryCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 28,
-              backgroundColor: AppColors.primary.withOpacity(0.15),
+              backgroundColor: AppColors.primary.withValues(alpha: 0.15),
               child: const Icon(
                 Iconsax.buildings,
                 color: AppColors.primary,

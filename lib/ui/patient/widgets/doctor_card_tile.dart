@@ -27,7 +27,7 @@ class DoctorCardTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: AppColors.grey.withOpacity(0.15),
+              color: AppColors.grey.withValues(alpha: 0.15),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),

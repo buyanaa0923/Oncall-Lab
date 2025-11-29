@@ -174,7 +174,7 @@ class _CategorySection extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
@@ -257,10 +257,11 @@ class _ServiceCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: categoryColor.withOpacity(0.3)),
+            border:
+                Border.all(color: categoryColor.withValues(alpha: 0.3)),
             boxShadow: [
               BoxShadow(
-                color: categoryColor.withOpacity(0.1),
+                color: categoryColor.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -309,7 +310,7 @@ class _ServiceCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: categoryColor.withOpacity(0.1),
+                        color: categoryColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(

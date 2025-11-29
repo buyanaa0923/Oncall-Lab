@@ -18,10 +18,45 @@ class PatientProfileScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            ProfileAvatar(
-              avatarUrl: profile?.getAvatarUrl(),
-              initials: profile?.initials ?? 'U',
-              radius: 50,
+            GestureDetector(
+              onTap: () async {
+                final success = await authStore.uploadProfileAvatar();
+                if (!context.mounted) return;
+                if (success) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Profile photo updated')),
+                  );
+                } else if (authStore.errorMessage != null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(authStore.errorMessage!),
+                      backgroundColor: AppColors.error,
+                    ),
+                  );
+                }
+              },
+              child: Stack(
+                alignment: Alignment.bottomRight,
+                children: [
+                  ProfileAvatar(
+                    avatarUrl: profile?.getAvatarUrl(),
+                    initials: profile?.initials ?? 'U',
+                    radius: 50,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.camera_alt,
+                      size: 18,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 20),
             Text(
@@ -43,7 +78,7 @@ class PatientProfileScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.1),
+                color: AppColors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: const Text(
@@ -199,7 +234,7 @@ Widget _buildProfileOption({
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: AppColors.grey.withOpacity(0.1),
+            color: AppColors.grey.withValues(alpha: 0.1),
             blurRadius: 5,
             offset: const Offset(0, 2),
           ),
@@ -210,7 +245,7 @@ Widget _buildProfileOption({
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
@@ -330,7 +365,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                 height: 4,
                 margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(
-                  color: AppColors.grey.withOpacity(0.3),
+                  color: AppColors.grey.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -449,7 +484,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
           borderRadius: BorderRadius.circular(12),
         ),
         filled: true,
-        fillColor: AppColors.grey.withOpacity(0.05),
+        fillColor: AppColors.grey.withValues(alpha: 0.05),
       ),
     );
   }
@@ -555,7 +590,7 @@ class _SavedAddressSheetState extends State<SavedAddressSheet> {
             height: 4,
             margin: const EdgeInsets.only(bottom: 16),
             decoration: BoxDecoration(
-              color: AppColors.grey.withOpacity(0.3),
+              color: AppColors.grey.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -584,7 +619,7 @@ class _SavedAddressSheetState extends State<SavedAddressSheet> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       filled: true,
-                      fillColor: AppColors.grey.withOpacity(0.05),
+                      fillColor: AppColors.grey.withValues(alpha: 0.05),
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -656,7 +691,7 @@ class _SavedAddressSheetState extends State<SavedAddressSheet> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       filled: true,
-                      fillColor: AppColors.grey.withOpacity(0.05),
+                      fillColor: AppColors.grey.withValues(alpha: 0.05),
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -725,8 +760,8 @@ class _SavedAddressSheetState extends State<SavedAddressSheet> {
     return Container(
       decoration: BoxDecoration(
         color: hasAddress
-            ? AppColors.primary.withOpacity(0.05)
-            : AppColors.grey.withOpacity(0.1),
+            ? AppColors.primary.withValues(alpha: 0.05)
+            : AppColors.grey.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isSelected ? AppColors.primary : Colors.transparent,

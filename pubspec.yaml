@@ -23,6 +23,9 @@ dependencies:
   # Backend & Database
   supabase_flutter: ^2.5.0
 
+  # File picking
+  image_picker: ^1.1.2
+
   # Navigation
   auto_route: ^8.1.3
 

@@ -104,7 +104,7 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: AppColors.grey.withOpacity(0.1),
+                            color: AppColors.grey.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(5),
                           ),
                           child: LayoutBuilder(
@@ -113,7 +113,7 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
                               return TabBar(
                                 indicatorColor: AppColors.primary,
                                 unselectedLabelColor:
-                                    AppColors.black.withOpacity(0.5),
+                                    AppColors.black.withValues(alpha: 0.5),
                                 labelStyle: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w600,
@@ -178,7 +178,7 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
                         ? Icons.check_circle_outline
                         : Icons.cancel_outlined,
                 size: 60,
-                color: AppColors.grey.withOpacity(0.5),
+                color: AppColors.grey.withValues(alpha: 0.5),
               ),
               const SizedBox(height: 20),
               Text(
@@ -229,7 +229,8 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.getStatusColor(statusStr).withOpacity(0.1),
+                  color: AppColors.getStatusColor(statusStr)
+                      .withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -252,9 +253,11 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: AppColors.getStatusColor(statusStr).withOpacity(0.2),
+                        color: AppColors.getStatusColor(statusStr)
+                            .withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -273,8 +276,8 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: request.requestType == RequestType.labService
-                        ? Colors.blue.withOpacity(0.1)
-                        : Colors.purple.withOpacity(0.1),
+                        ? Colors.blue.withValues(alpha: 0.1)
+                        : Colors.purple.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(

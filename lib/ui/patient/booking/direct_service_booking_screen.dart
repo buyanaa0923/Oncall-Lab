@@ -280,9 +280,10 @@ class _DirectServiceBookingScreenState
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.05),
+        color: AppColors.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+        border:
+            Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -332,9 +333,10 @@ class _DirectServiceBookingScreenState
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.warning.withOpacity(0.1),
+            color: AppColors.warning.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.warning.withOpacity(0.3)),
+            border: Border.all(
+                color: AppColors.warning.withValues(alpha: 0.3)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -399,13 +401,13 @@ class _DirectServiceBookingScreenState
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: anyDoctor
-                  ? AppColors.primary.withOpacity(0.1)
+                  ? AppColors.primary.withValues(alpha: 0.1)
                   : Colors.white,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: anyDoctor
                     ? AppColors.primary
-                    : AppColors.grey.withOpacity(0.3),
+                    : AppColors.grey.withValues(alpha: 0.3),
                 width: 2,
               ),
             ),
@@ -466,7 +468,7 @@ class _DirectServiceBookingScreenState
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: AppColors.grey.withOpacity(0.1),
+                color: AppColors.grey.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Center(
@@ -519,12 +521,13 @@ class _DirectServiceBookingScreenState
             }
           },
           borderRadius: BorderRadius.circular(12),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.grey.withOpacity(0.3)),
-              borderRadius: BorderRadius.circular(12),
-            ),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                border: Border.all(
+                    color: AppColors.grey.withValues(alpha: 0.3)),
+                borderRadius: BorderRadius.circular(12),
+              ),
             child: Row(
               children: [
                 const Icon(Iconsax.calendar, color: AppColors.primary),
@@ -571,12 +574,12 @@ class _DirectServiceBookingScreenState
                 decoration: BoxDecoration(
                   color: isSelected
                       ? AppColors.primary
-                      : AppColors.grey.withOpacity(0.1),
+                      : AppColors.grey.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isSelected
                         ? AppColors.primary
-                        : AppColors.grey.withOpacity(0.3),
+                        : AppColors.grey.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Text(
@@ -641,7 +644,7 @@ class _DirectServiceBookingScreenState
                 borderRadius: BorderRadius.circular(12),
               ),
               filled: true,
-              fillColor: AppColors.grey.withOpacity(0.1),
+              fillColor: AppColors.grey.withValues(alpha: 0.1),
             ),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
@@ -676,7 +679,7 @@ class _DirectServiceBookingScreenState
               borderRadius: BorderRadius.circular(12),
             ),
             filled: true,
-            fillColor: AppColors.grey.withOpacity(0.1),
+            fillColor: AppColors.grey.withValues(alpha: 0.1),
           ),
         ),
       ],
@@ -738,13 +741,13 @@ class _DoctorCard extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: isSelected
-                ? AppColors.primary.withOpacity(0.1)
+                ? AppColors.primary.withValues(alpha: 0.1)
                 : Colors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isSelected
                   ? AppColors.primary
-                  : AppColors.grey.withOpacity(0.3),
+                  : AppColors.grey.withValues(alpha: 0.3),
               width: 2,
             ),
           ),
@@ -818,7 +821,7 @@ class _DoctorCard extends StatelessWidget {
 
     return CircleAvatar(
       radius: 28,
-      backgroundColor: AppColors.primary.withOpacity(0.2),
+      backgroundColor: AppColors.primary.withValues(alpha: 0.2),
       backgroundImage: hasAvatar
           ? (isDefaultAvatar
               ? AssetImage(avatarUrl!) as ImageProvider

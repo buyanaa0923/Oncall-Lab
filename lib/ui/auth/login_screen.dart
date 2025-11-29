@@ -61,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.1),
+                      color: AppColors.primary.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -94,18 +94,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
-                    labelText: 'Phone Number',
-                    hintText: '+976 99123456',
+                    labelText: 'Phone number',
+                    hintText: '99123456',
                     prefixIcon: const Icon(Icons.phone),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     filled: true,
-                    fillColor: AppColors.grey.withOpacity(0.1),
+                    fillColor: AppColors.grey.withValues(alpha: 0.1),
                   ),
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your phone number';
+                    final v = value?.trim() ?? '';
+                    if (v.isEmpty) return 'Please enter your phone number';
+                    if (v.length != 8 || int.tryParse(v) == null) {
+                      return 'Enter 8 digit number (e.g. 99123456)';
                     }
                     return null;
                   },
@@ -135,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       filled: true,
-                      fillColor: AppColors.grey.withOpacity(0.1),
+                      fillColor: AppColors.grey.withValues(alpha: 0.1),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -203,20 +205,25 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   children: [
                     Expanded(
-                      child: Divider(color: AppColors.grey.withOpacity(0.3)),
+                      child: Divider(
+                          color:
+                              AppColors.grey.withValues(alpha: 0.3)),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
                         'OR',
                         style: TextStyle(
-                          color: AppColors.grey.withOpacity(0.7),
+                          color:
+                              AppColors.grey.withValues(alpha: 0.7),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
                     Expanded(
-                      child: Divider(color: AppColors.grey.withOpacity(0.3)),
+                      child: Divider(
+                          color:
+                              AppColors.grey.withValues(alpha: 0.3)),
                     ),
                   ],
                 ),
