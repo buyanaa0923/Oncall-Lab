@@ -1,15 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:oncall_lab/core/constants/app_colors.dart';
 import 'package:oncall_lab/core/services/supabase_service.dart';
 import 'package:oncall_lab/stores/auth_store.dart';
-import 'package:oncall_lab/data/models/profile_model.dart';
-import 'package:oncall_lab/ui/patient/widgets/visit_options_section.dart';
-import 'package:oncall_lab/ui/patient/widgets/test_types_section.dart';
-import 'dart:async';
-
-import 'package:oncall_lab/ui/patient/widgets/available_doctors_section.dart';
 import 'package:oncall_lab/ui/patient/all_lab_services_screen.dart';
 import 'package:oncall_lab/ui/patient/direct_services_screen.dart';
+import 'package:oncall_lab/ui/patient/widgets/available_doctors_section.dart';
+import 'package:oncall_lab/ui/patient/widgets/test_types_section.dart';
+import 'package:oncall_lab/ui/patient/widgets/visit_options_section.dart';
 import 'package:oncall_lab/ui/shared/widgets/profile_avatar.dart';
 
 class PatientHomeScreen extends StatefulWidget {
@@ -214,8 +213,9 @@ class _PatientHomeScreenState extends State<PatientHomeScreen>
 
   Widget _buildHeader() {
     final profile = authStore.currentProfile;
-    final displayName =
-        (profile?.firstName?.isNotEmpty ?? false) ? profile!.firstName : profile?.displayName;
+    final displayName = (profile?.firstName?.isNotEmpty ?? false)
+        ? profile!.firstName
+        : profile?.displayName;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -267,5 +267,4 @@ class _PatientHomeScreenState extends State<PatientHomeScreen>
       ),
     );
   }
-
 }

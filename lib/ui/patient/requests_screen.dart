@@ -29,7 +29,6 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
 
   Future<void> _refreshRequests() async {
     _subscribeToRequests();
-    // Wait a bit for the stream to fetch initial data
     await Future.delayed(const Duration(milliseconds: 500));
   }
 
@@ -105,17 +104,17 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
                         child: Container(
                           decoration: BoxDecoration(
                             color: AppColors.grey.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(5),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           child: LayoutBuilder(
                             builder: (context, constraints) {
-                              final tabWidth = (constraints.maxWidth - 12) / 3;
                               return TabBar(
                                 indicatorColor: AppColors.primary,
-                                unselectedLabelColor:
-                                    AppColors.black.withValues(alpha: 0.5),
+                                padding: EdgeInsets.all(2),
+                                dividerHeight: 0,
+                                indicatorSize: TabBarIndicatorSize.tab,
                                 labelStyle: const TextStyle(
-                                  fontSize: 15,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
                                 labelColor: Colors.white,
@@ -123,19 +122,14 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
                                   color: AppColors.primary,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
+                                unselectedLabelStyle: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w500),
+                                unselectedLabelColor:
+                                    AppColors.black.withValues(alpha: 0.5),
                                 tabs: [
-                                  SizedBox(
-                                    width: tabWidth,
-                                    child: const Tab(text: 'Active'),
-                                  ),
-                                  SizedBox(
-                                    width: tabWidth,
-                                    child: const Tab(text: 'Completed'),
-                                  ),
-                                  SizedBox(
-                                    width: tabWidth,
-                                    child: const Tab(text: 'Cancelled'),
-                                  ),
+                                  const Tab(text: 'Active'),
+                                  const Tab(text: 'Completed'),
+                                  const Tab(text: 'Cancelled'),
                                 ],
                               );
                             },
@@ -146,9 +140,14 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
                       Expanded(
                         child: TabBarView(
                           children: [
-                            _buildRequestsList(testRequestStore.activeRequests, 'active'),
-                            _buildRequestsList(testRequestStore.completedRequests, 'completed'),
-                            _buildRequestsList(testRequestStore.cancelledRequests, 'cancelled'),
+                            _buildRequestsList(
+                                testRequestStore.activeRequests, 'active'),
+                            _buildRequestsList(
+                                testRequestStore.completedRequests,
+                                'completed'),
+                            _buildRequestsList(
+                                testRequestStore.cancelledRequests,
+                                'cancelled'),
                           ],
                         ),
                       ),
@@ -221,20 +220,20 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
             margin: const EdgeInsets.only(bottom: 15),
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.grey.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: AppColors.getStatusColor(statusStr),
-                width: 2,
+                color: AppColors.secondary.withValues(alpha: 0.05),
+                width: 1,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.getStatusColor(statusStr)
-                      .withValues(alpha: 0.1),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+              // boxShadow: [
+              //   BoxShadow(
+              //     color: AppColors.getStatusColor(statusStr)
+              //         .withValues(alpha: 0.1),
+              //     blurRadius: 8,
+              //     offset: const Offset(0, 2),
+              //   ),
+              // ],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,8 +252,8 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
                       ),
                     ),
                     Container(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
                         color: AppColors.getStatusColor(statusStr)
                             .withValues(alpha: 0.2),
@@ -273,7 +272,8 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
                 ),
                 const SizedBox(height: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: request.requestType == RequestType.labService
                         ? Colors.blue.withValues(alpha: 0.1)

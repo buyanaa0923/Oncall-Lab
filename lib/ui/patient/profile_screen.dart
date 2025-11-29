@@ -205,7 +205,8 @@ class PatientProfileScreen extends StatelessWidget {
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.error,
                   side: const BorderSide(color: AppColors.error),
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                 ),
               ),
             ),
@@ -222,11 +223,11 @@ class PatientProfileScreen extends StatelessWidget {
     );
   }
 
-Widget _buildProfileOption({
-  required IconData icon,
-  required String title,
-  required VoidCallback onTap,
-}) {
+  Widget _buildProfileOption({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
@@ -290,16 +291,14 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
   void initState() {
     super.initState();
     final profile = widget.profile;
-    _firstNameController =
-        TextEditingController(text: profile.firstName ?? '');
+    _firstNameController = TextEditingController(text: profile.firstName ?? '');
     _lastNameController = TextEditingController(text: profile.lastName ?? '');
     _emailController = TextEditingController(text: profile.email ?? '');
     _addressController =
         TextEditingController(text: profile.permanentAddress ?? '');
     _registrationController =
         TextEditingController(text: profile.registrationNumber ?? '');
-    _allergiesController =
-        TextEditingController(text: profile.allergies ?? '');
+    _allergiesController = TextEditingController(text: profile.allergies ?? '');
   }
 
   @override
@@ -357,7 +356,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
         key: _formKey,
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
@@ -370,7 +369,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                 ),
               ),
               const Text(
-                'Edit Profile',
+                'Хувийн мэдээлэл',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -473,19 +472,36 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
     TextInputType? keyboardType,
     String? Function(String?)? validator,
   }) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      maxLines: maxLines,
-      validator: validator,
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: Text(
+            label,
+            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w400),
+          ),
         ),
-        filled: true,
-        fillColor: AppColors.grey.withValues(alpha: 0.05),
-      ),
+        TextFormField(
+          controller: controller,
+          keyboardType: keyboardType,
+          maxLines: maxLines,
+          validator: validator,
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          decoration: InputDecoration(
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(6),
+                borderSide: BorderSide(
+                    color: AppColors.secondary.withValues(alpha: 0.05))),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide:
+                  BorderSide(color: AppColors.grey.withValues(alpha: 0.05)),
+            ),
+            filled: true,
+            fillColor: AppColors.grey.withValues(alpha: 0.05),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -742,8 +758,9 @@ class _SavedAddressSheetState extends State<SavedAddressSheet> {
                       ? _clearAddress
                       : () => Navigator.pop(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    hasAddress && isSelected ? AppColors.error : AppColors.primary,
+                backgroundColor: hasAddress && isSelected
+                    ? AppColors.error
+                    : AppColors.primary,
                 foregroundColor: Colors.white,
               ),
               child: Text(
