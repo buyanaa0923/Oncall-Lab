@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:oncall_lab/core/constants/app_colors.dart';
+import 'package:oncall_lab/l10n/app_localizations.dart';
 
 class SavedAddressSelector extends StatelessWidget {
   const SavedAddressSelector({
@@ -17,6 +18,8 @@ class SavedAddressSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -53,7 +56,7 @@ class SavedAddressSelector extends StatelessWidget {
             selected ? Icons.edit_location_alt : Icons.check_circle,
           ),
           label: Text(
-            selected ? 'Type a different address' : 'Use saved address',
+            selected ? l10n.typeDifferentAddress : l10n.useSavedAddress,
           ),
         ),
       ],

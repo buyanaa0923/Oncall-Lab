@@ -4,6 +4,7 @@ import 'package:oncall_lab/core/constants/app_colors.dart';
 import 'package:oncall_lab/data/models/laboratory_service_model.dart';
 import 'package:oncall_lab/stores/service_store.dart';
 import 'package:oncall_lab/ui/patient/booking/lab_service_booking_screen.dart';
+import 'package:oncall_lab/l10n/app_localizations.dart';
 
 class LaboratoryDetailScreenNew extends StatefulWidget {
   final Map<String, dynamic> laboratory;
@@ -68,6 +69,8 @@ class _LaboratoryDetailScreenNewState
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -78,7 +81,7 @@ class _LaboratoryDetailScreenNewState
       body: Column(
         children: [
           // Laboratory Info Header
-          _buildLabInfo(),
+          _buildLabInfo(l10n),
           const Divider(height: 1),
 
           // Search Bar
@@ -91,7 +94,7 @@ class _LaboratoryDetailScreenNewState
                 });
               },
               decoration: InputDecoration(
-                hintText: 'Search services...',
+                hintText: l10n.searchServices,
                 prefixIcon: const Icon(Iconsax.search_normal),
                 filled: true,
                 fillColor: AppColors.grey.withValues(alpha: 0.1),
@@ -105,14 +108,14 @@ class _LaboratoryDetailScreenNewState
 
           // Services List
           Expanded(
-            child: _buildServicesList(),
+            child: _buildServicesList(l10n),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildLabInfo() {
+  Widget _buildLabInfo(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(16),
       color: AppColors.primary.withValues(alpha: 0.05),
@@ -125,7 +128,7 @@ class _LaboratoryDetailScreenNewState
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  widget.laboratory['address'] ?? 'Address not available',
+                  widget.laboratory['address'] ?? l10n.addressNotAvailable,
                   style: const TextStyle(fontSize: 14),
                 ),
               ),
@@ -163,7 +166,7 @@ class _LaboratoryDetailScreenNewState
     );
   }
 
-  Widget _buildServicesList() {
+  Widget _buildServicesList(AppLocalizations l10n) {
     if (isLoading) {
       return const Center(
         child: CircularProgressIndicator(color: AppColors.primary),
@@ -179,9 +182,9 @@ class _LaboratoryDetailScreenNewState
             children: [
               const Icon(Icons.error_outline, size: 60, color: AppColors.error),
               const SizedBox(height: 16),
-              const Text(
-                'Error loading services',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Text(
+                l10n.errorLoadingServices,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               Text(
@@ -192,7 +195,7 @@ class _LaboratoryDetailScreenNewState
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _loadServices,
-                child: const Text('Retry'),
+                child: Text(l10n.retry),
               ),
             ],
           ),
@@ -215,8 +218,8 @@ class _LaboratoryDetailScreenNewState
             const SizedBox(height: 16),
             Text(
               searchQuery.isEmpty
-                  ? 'No services available'
-                  : 'No services match your search',
+                  ? l10n.noServicesAvailable
+                  : l10n.noServicesMatchSearch,
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -273,6 +276,7 @@ class _ServiceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final service = labService.service!;
     final category = service.category;
+    final l10n = AppLocalizations.of(context)!;
 
     return InkWell(
       onTap: onTap,
@@ -370,7 +374,7 @@ class _ServiceCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    '${labService.priceMnt} MNT',
+                    l10n.priceInMNT(labService.priceMnt),
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -385,7 +389,7 @@ class _ServiceCard extends StatelessWidget {
                       const Icon(Icons.access_time, size: 16, color: AppColors.grey),
                       const SizedBox(width: 4),
                       Text(
-                        '~${labService.estimatedDurationHours}h',
+                        '~${l10n.durationHours(labService.estimatedDurationHours!)}',
                         style: const TextStyle(
                           fontSize: 13,
                           color: AppColors.grey,

@@ -11,6 +11,7 @@ import 'package:oncall_lab/ui/patient/widgets/available_doctors_section.dart';
 import 'package:oncall_lab/ui/patient/all_lab_services_screen.dart';
 import 'package:oncall_lab/ui/patient/direct_services_screen.dart';
 import 'package:oncall_lab/ui/shared/widgets/profile_avatar.dart';
+import 'package:oncall_lab/l10n/app_localizations.dart';
 
 class PatientHomeScreen extends StatefulWidget {
   final VoidCallback onNavigateToProfile;
@@ -98,6 +99,8 @@ class _PatientHomeScreenState extends State<PatientHomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     if (isLoading) {
       return const Center(
         child: CircularProgressIndicator(
@@ -119,9 +122,9 @@ class _PatientHomeScreenState extends State<PatientHomeScreen>
                 color: AppColors.error,
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Error loading data',
-                style: TextStyle(
+              Text(
+                l10n.errorLoadingData,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -141,7 +144,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen>
                   });
                   _loadData();
                 },
-                child: const Text('Retry'),
+                child: Text(l10n.retry),
               ),
             ],
           ),
@@ -154,7 +157,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 20),
-          _buildHeader(),
+          _buildHeader(l10n),
           const SizedBox(height: 20),
           Expanded(
             child: RefreshIndicator(
@@ -187,11 +190,11 @@ class _PatientHomeScreenState extends State<PatientHomeScreen>
                     const SizedBox(height: 30),
                     TestTypesSection(testTypes: testTypes),
                     const SizedBox(height: 35),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Text(
-                        "Available doctors",
-                        style: TextStyle(
+                        l10n.availableDoctors,
+                        style: const TextStyle(
                           fontSize: 22,
                           color: AppColors.black,
                           letterSpacing: -.5,
@@ -212,7 +215,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen>
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(AppLocalizations l10n) {
     final profile = authStore.currentProfile;
     final displayName =
         (profile?.firstName?.isNotEmpty ?? false) ? profile!.firstName : profile?.displayName;
@@ -227,7 +230,7 @@ class _PatientHomeScreenState extends State<PatientHomeScreen>
               children: [
                 Flexible(
                   child: Text(
-                    displayName ?? 'Welcome',
+                    displayName ?? l10n.welcome,
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,

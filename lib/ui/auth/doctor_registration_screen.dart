@@ -120,10 +120,12 @@ class _DoctorRegistrationScreenState extends State<DoctorRegistrationScreen> {
               file: _selectedProfilePhoto!,
             );
             if (url != null) {
+              final cacheBustedUrl =
+                  '$url?t=${DateTime.now().millisecondsSinceEpoch}';
               await supabase
                   .from('profiles')
                   .update({
-                    'avatar_url': url,
+                    'avatar_url': cacheBustedUrl,
                     'updated_at': DateTime.now().toIso8601String(),
                   })
                   .eq('id', userId);
@@ -131,7 +133,7 @@ class _DoctorRegistrationScreenState extends State<DoctorRegistrationScreen> {
               await supabase
                   .from('doctor_profiles')
                   .update({
-                    'photo_url': url,
+                    'photo_url': cacheBustedUrl,
                     'updated_at': DateTime.now().toIso8601String(),
                   })
                   .eq('id', userId);

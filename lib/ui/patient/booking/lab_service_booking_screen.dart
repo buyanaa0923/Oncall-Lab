@@ -5,6 +5,7 @@ import 'package:oncall_lab/data/models/laboratory_service_model.dart';
 import 'package:oncall_lab/stores/auth_store.dart';
 import 'package:oncall_lab/stores/test_request_store.dart';
 import 'package:oncall_lab/ui/patient/booking/widgets/saved_address_selector.dart';
+import 'package:oncall_lab/l10n/app_localizations.dart';
 
 class LabServiceBookingScreen extends StatefulWidget {
   final Map<String, dynamic> laboratory;
@@ -65,6 +66,7 @@ class _LabServiceBookingScreenState extends State<LabServiceBookingScreen> {
   Future<void> _submitBooking() async {
     if (!_formKey.currentState!.validate()) return;
 
+    final l10n = AppLocalizations.of(context)!;
     setState(() => isSubmitting = true);
 
     try {
@@ -89,8 +91,8 @@ class _LabServiceBookingScreenState extends State<LabServiceBookingScreen> {
         if (request != null) {
           // Show success message
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Request submitted successfully!'),
+            SnackBar(
+              content: Text(l10n.requestSubmitted),
               backgroundColor: AppColors.success,
             ),
           );
@@ -101,7 +103,9 @@ class _LabServiceBookingScreenState extends State<LabServiceBookingScreen> {
           // Show error from store
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Error: ${testRequestStore.errorMessage ?? "Unknown error"}'),
+              content: Text(
+                '${l10n.error}: ${testRequestStore.errorMessage ?? l10n.unknownError}',
+              ),
               backgroundColor: AppColors.error,
             ),
           );
@@ -116,12 +120,13 @@ class _LabServiceBookingScreenState extends State<LabServiceBookingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final service = widget.laboratoryService.service!;
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Book Service'),
+        title: Text(l10n.bookService),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
@@ -170,7 +175,7 @@ class _LabServiceBookingScreenState extends State<LabServiceBookingScreen> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          '${widget.laboratoryService.priceMnt} MNT',
+                          l10n.priceInMNT(widget.laboratoryService.priceMnt),
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -187,7 +192,10 @@ class _LabServiceBookingScreenState extends State<LabServiceBookingScreen> {
                                 size: 16, color: AppColors.grey),
                             const SizedBox(width: 4),
                             Text(
-                              '~${widget.laboratoryService.estimatedDurationHours}h for results',
+                              l10n.resultsReadyHours(
+                                widget.laboratoryService
+                                    .estimatedDurationHours!,
+                              ),
                               style: const TextStyle(
                                 fontSize: 13,
                                 color: AppColors.grey,
@@ -216,14 +224,14 @@ class _LabServiceBookingScreenState extends State<LabServiceBookingScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
+                    Row(
                       children: [
-                        Icon(Icons.info_outline,
+                        const Icon(Icons.info_outline,
                             color: AppColors.warning, size: 20),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Text(
-                          'Preparation Required',
-                          style: TextStyle(
+                          l10n.preparationRequired,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: AppColors.warning,
@@ -247,9 +255,9 @@ class _LabServiceBookingScreenState extends State<LabServiceBookingScreen> {
             ],
 
             // Date Selection
-            const Text(
-              'Select Date',
-              style: TextStyle(
+            Text(
+              l10n.selectDate,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: AppColors.black,
@@ -296,9 +304,9 @@ class _LabServiceBookingScreenState extends State<LabServiceBookingScreen> {
             const SizedBox(height: 24),
 
             // Time Slot Selection
-            const Text(
-              'Select Time Slot',
-              style: TextStyle(
+            Text(
+              l10n.selectTimeSlot,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: AppColors.black,
@@ -343,9 +351,9 @@ class _LabServiceBookingScreenState extends State<LabServiceBookingScreen> {
             const SizedBox(height: 24),
 
             // Address
-            const Text(
-              'Collection Address',
-              style: TextStyle(
+            Text(
+              l10n.collectionAddress,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: AppColors.black,
@@ -378,7 +386,7 @@ class _LabServiceBookingScreenState extends State<LabServiceBookingScreen> {
                 controller: _addressController,
                 maxLines: 3,
                 decoration: InputDecoration(
-                  hintText: 'Enter your address...',
+                  hintText: l10n.addressHint,
                   prefixIcon:
                       const Icon(Iconsax.location, color: AppColors.primary),
                   border: OutlineInputBorder(
@@ -389,7 +397,7 @@ class _LabServiceBookingScreenState extends State<LabServiceBookingScreen> {
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Please enter your address';
+                    return l10n.pleaseEnterAddress;
                   }
                   return null;
                 },
@@ -398,9 +406,9 @@ class _LabServiceBookingScreenState extends State<LabServiceBookingScreen> {
             const SizedBox(height: 24),
 
             // Notes
-            const Text(
-              'Additional Notes (Optional)',
-              style: TextStyle(
+            Text(
+              l10n.additionalNotesOptional,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: AppColors.black,
@@ -411,7 +419,7 @@ class _LabServiceBookingScreenState extends State<LabServiceBookingScreen> {
               controller: _notesController,
               maxLines: 3,
               decoration: InputDecoration(
-                hintText: 'Any special instructions...',
+                hintText: l10n.specialInstructionsHint,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -444,9 +452,9 @@ class _LabServiceBookingScreenState extends State<LabServiceBookingScreen> {
                               AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       )
-                    : const Text(
-                        'Confirm Booking',
-                        style: TextStyle(
+                    : Text(
+                        l10n.confirmBooking,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),

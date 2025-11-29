@@ -4,6 +4,7 @@ import 'package:oncall_lab/core/constants/app_colors.dart';
 import 'package:oncall_lab/stores/auth_store.dart';
 import 'package:oncall_lab/stores/test_request_store.dart';
 import 'package:oncall_lab/data/models/test_request_model.dart';
+import 'package:oncall_lab/l10n/app_localizations.dart';
 
 class PatientRequestsScreen extends StatefulWidget {
   const PatientRequestsScreen({super.key});
@@ -41,6 +42,8 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Observer(
       builder: (_) {
         if (testRequestStore.isLoading) {
@@ -72,7 +75,7 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _refreshRequests,
-                    child: const Text('Retry'),
+                    child: Text(l10n.retry),
                   ),
                 ],
               ),
@@ -84,11 +87,11 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.all(15),
+              Padding(
+                padding: const EdgeInsets.all(15),
                 child: Text(
-                  "My Requests",
-                  style: TextStyle(
+                  l10n.myRequests,
+                  style: const TextStyle(
                     fontSize: 28,
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
@@ -126,15 +129,15 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
                                 tabs: [
                                   SizedBox(
                                     width: tabWidth,
-                                    child: const Tab(text: 'Active'),
+                                    child: Tab(text: l10n.activeRequests),
                                   ),
                                   SizedBox(
                                     width: tabWidth,
-                                    child: const Tab(text: 'Completed'),
+                                    child: Tab(text: l10n.completedRequests),
                                   ),
                                   SizedBox(
                                     width: tabWidth,
-                                    child: const Tab(text: 'Cancelled'),
+                                    child: Tab(text: l10n.cancelledCount),
                                   ),
                                 ],
                               );
@@ -146,9 +149,21 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
                       Expanded(
                         child: TabBarView(
                           children: [
-                            _buildRequestsList(testRequestStore.activeRequests, 'active'),
-                            _buildRequestsList(testRequestStore.completedRequests, 'completed'),
-                            _buildRequestsList(testRequestStore.cancelledRequests, 'cancelled'),
+                            _buildRequestsList(
+                              testRequestStore.activeRequests,
+                              'active',
+                              l10n,
+                            ),
+                            _buildRequestsList(
+                              testRequestStore.completedRequests,
+                              'completed',
+                              l10n,
+                            ),
+                            _buildRequestsList(
+                              testRequestStore.cancelledRequests,
+                              'cancelled',
+                              l10n,
+                            ),
                           ],
                         ),
                       ),
@@ -163,7 +178,11 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
     );
   }
 
-  Widget _buildRequestsList(List<TestRequestModel> requests, String type) {
+  Widget _buildRequestsList(
+    List<TestRequestModel> requests,
+    String type,
+    AppLocalizations l10n,
+  ) {
     if (requests.isEmpty) {
       return Center(
         child: Padding(
@@ -182,11 +201,11 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
               ),
               const SizedBox(height: 20),
               Text(
-                type == 'active'
-                    ? 'No active requests'
-                    : type == 'completed'
-                        ? 'No completed requests'
-                        : 'No cancelled requests',
+                switch (type) {
+                  'active' => l10n.noActiveRequests,
+                  'completed' => l10n.noCompletedRequests,
+                  _ => l10n.noCancelledRequests,
+                },
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -194,10 +213,10 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              const Text(
-                'Request a home service to get started',
+              Text(
+                l10n.requestHomeServicePrompt,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   color: AppColors.grey,
                 ),
               ),
@@ -216,6 +235,7 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
         itemBuilder: (context, index) {
           final request = requests[index];
           final statusStr = _getStatusString(request.status);
+          final statusLabel = _getStatusLabel(request.status, l10n);
 
           return Container(
             margin: const EdgeInsets.only(bottom: 15),
@@ -244,7 +264,7 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
                   children: [
                     Expanded(
                       child: Text(
-                        _getRequestTitle(request),
+                        _getRequestTitle(request, l10n),
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -261,7 +281,7 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        AppColors.getStatusText(statusStr),
+                        statusLabel,
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -282,8 +302,8 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
                   ),
                   child: Text(
                     request.requestType == RequestType.labService
-                        ? 'Lab Test Service'
-                        : 'Direct Home Service',
+                        ? l10n.labTestServiceLabel
+                        : l10n.directHomeServiceLabel,
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
@@ -303,7 +323,10 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
                     ),
                     const SizedBox(width: 5),
                     Text(
-                      'Scheduled: ${request.scheduledDate} ${request.scheduledTimeSlot ?? ''}',
+                      l10n.scheduledAt(
+                        request.scheduledDate,
+                        request.scheduledTimeSlot ?? '',
+                      ),
                       style: const TextStyle(
                         fontSize: 14,
                         color: AppColors.grey,
@@ -335,7 +358,7 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  'Price: ${request.priceMnt} MNT',
+                  '${l10n.price}: ${l10n.priceInMNT(request.priceMnt)}',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -369,12 +392,28 @@ class _PatientRequestsScreenState extends State<PatientRequestsScreen> {
     }
   }
 
-  String _getRequestTitle(TestRequestModel request) {
-    // For now, return generic title - we'll need to fetch service names separately
-    if (request.requestType == RequestType.labService) {
-      return 'Lab Test Collection';
-    } else {
-      return 'Home Service Request';
+  String _getRequestTitle(TestRequestModel request, AppLocalizations l10n) {
+    return request.requestType == RequestType.labService
+        ? l10n.labTestCollection
+        : l10n.homeServiceRequest;
+  }
+
+  String _getStatusLabel(RequestStatus status, AppLocalizations l10n) {
+    switch (status) {
+      case RequestStatus.pending:
+        return l10n.pending;
+      case RequestStatus.accepted:
+        return l10n.accepted;
+      case RequestStatus.onTheWay:
+        return l10n.onTheWay;
+      case RequestStatus.sampleCollected:
+        return l10n.sampleCollected;
+      case RequestStatus.deliveredToLab:
+        return l10n.deliveredToLab;
+      case RequestStatus.completed:
+        return l10n.completed;
+      case RequestStatus.cancelled:
+        return l10n.cancelled;
     }
   }
 }

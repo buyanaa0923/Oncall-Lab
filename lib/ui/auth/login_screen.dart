@@ -4,6 +4,8 @@ import 'package:oncall_lab/core/constants/app_colors.dart';
 import 'package:oncall_lab/stores/auth_store.dart';
 import 'package:oncall_lab/ui/auth/patient_registration_screen.dart';
 import 'package:oncall_lab/ui/auth/doctor_registration_screen.dart';
+import 'package:oncall_lab/l10n/app_localizations.dart';
+import 'package:oncall_lab/ui/shared/widgets/language_switcher.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -45,6 +47,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -55,7 +59,13 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 40),
+                const SizedBox(height: 20),
+                // Language switcher at the top
+                const Align(
+                  alignment: Alignment.centerRight,
+                  child: LanguageSwitcher(),
+                ),
+                const SizedBox(height: 20),
                 // Logo or app name
                 Center(
                   child: Container(
@@ -72,18 +82,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                const Text(
-                  'Welcome Back',
-                  style: TextStyle(
+                Text(
+                  l10n.welcomeBack,
+                  style: const TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
                     color: AppColors.black,
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  'Sign in to continue',
-                  style: TextStyle(
+                Text(
+                  l10n.signInToContinue,
+                  style: const TextStyle(
                     fontSize: 16,
                     color: AppColors.grey,
                   ),
@@ -94,8 +104,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
-                    labelText: 'Phone number',
-                    hintText: '99123456',
+                    labelText: l10n.phoneNumber,
+                    hintText: l10n.phoneNumberHint,
                     prefixIcon: const Icon(Icons.phone),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -105,9 +115,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   validator: (value) {
                     final v = value?.trim() ?? '';
-                    if (v.isEmpty) return 'Please enter your phone number';
+                    if (v.isEmpty) return l10n.pleaseEnterPhoneNumber;
                     if (v.length != 8 || int.tryParse(v) == null) {
-                      return 'Enter 8 digit number (e.g. 99123456)';
+                      return l10n.enterValidPhoneNumber;
                     }
                     return null;
                   },
@@ -119,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: _passwordController,
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
-                      labelText: 'Password',
+                      labelText: l10n.password,
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -141,10 +151,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
+                        return l10n.pleaseEnterPassword;
                       }
                       if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
+                        return l10n.passwordMinLength;
                       }
                       return null;
                     },
@@ -157,12 +167,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: TextButton(
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Password reset coming soon!'),
+                        SnackBar(
+                          content: Text(l10n.passwordResetComingSoon),
                         ),
                       );
                     },
-                    child: const Text('Forgot Password?'),
+                    child: Text(l10n.forgotPassword),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -190,9 +200,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
-                          : const Text(
-                              'Sign In',
-                              style: TextStyle(
+                          : Text(
+                              l10n.signIn,
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -212,7 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        'OR',
+                        l10n.or,
                         style: TextStyle(
                           color:
                               AppColors.grey.withValues(alpha: 0.7),
@@ -242,7 +252,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     },
                     icon: const Icon(Icons.person_add),
-                    label: const Text('Register as Patient'),
+                    label: Text(l10n.registerAsPatient),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.primary,
                       side: const BorderSide(color: AppColors.primary),
@@ -267,7 +277,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       );
                     },
                     icon: const Icon(Icons.medical_services),
-                    label: const Text('Register as Doctor'),
+                    label: Text(l10n.registerAsDoctor),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.info,
                       side: const BorderSide(color: AppColors.info),

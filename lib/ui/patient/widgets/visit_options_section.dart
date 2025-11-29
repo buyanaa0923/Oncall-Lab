@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:oncall_lab/core/constants/app_colors.dart';
 import 'package:oncall_lab/ui/patient/widgets/visit_option_card.dart';
+import 'package:oncall_lab/l10n/app_localizations.dart';
 
 class VisitOptionsSection extends StatelessWidget {
   const VisitOptionsSection({
@@ -15,6 +16,8 @@ class VisitOptionsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Row(
@@ -24,8 +27,8 @@ class VisitOptionsSection extends StatelessWidget {
               icon: Icons.add,
               iconWeight: FontWeight.w700,
               iconSize: 28,
-              title: 'Clinic visit',
-              subtitle: 'Make an appointment',
+              title: l10n.clinicVisit,
+              subtitle: l10n.makeAnAppointment,
               backgroundColor: AppColors.primary,
               titleColor: Colors.white,
               subtitleColor: Colors.white.withValues(alpha: 0.8),
@@ -41,8 +44,8 @@ class VisitOptionsSection extends StatelessWidget {
             child: VisitOptionCard(
               icon: Iconsax.home_2,
               iconFilled: true,
-              title: 'Home visit',
-              subtitle: 'Call the doctor home',
+              title: l10n.homeVisit,
+              subtitle: l10n.callTheDoctorHome,
               backgroundColor: Colors.white,
               titleColor: AppColors.black,
               subtitleColor: AppColors.black,

@@ -281,11 +281,13 @@ abstract class _AuthStore with Store {
         throw Exception('Failed to upload avatar');
       }
 
-      // Persist avatar URL directly on the profile record
+      // Persist avatar URL directly on the profile record, with cache buster
+      final cacheBustedUrl =
+          '$url?t=${DateTime.now().millisecondsSinceEpoch}';
       await supabase
           .from('profiles')
           .update({
-            'avatar_url': url,
+            'avatar_url': cacheBustedUrl,
             'updated_at': DateTime.now().toIso8601String(),
           })
           .eq('id', user.id);

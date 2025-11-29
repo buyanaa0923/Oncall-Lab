@@ -3,6 +3,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:oncall_lab/core/constants/app_colors.dart';
 import 'package:oncall_lab/core/services/supabase_service.dart';
 import 'package:oncall_lab/ui/patient/laboratory_detail_screen_new.dart';
+import 'package:oncall_lab/l10n/app_localizations.dart';
 
 class LaboratoriesScreen extends StatefulWidget {
   final String? preSelectedServiceId;
@@ -83,20 +84,24 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(widget.serviceName != null
-            ? 'Laboratories - ${widget.serviceName}'
-            : 'Laboratories'),
+        title: Text(
+          widget.serviceName != null
+              ? '${l10n.laboratories} - ${widget.serviceName}'
+              : l10n.laboratories,
+        ),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: _buildContent(),
+      body: _buildContent(l10n),
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(AppLocalizations l10n) {
     if (isLoading) {
       return const Center(
         child: CircularProgressIndicator(color: AppColors.primary),
@@ -113,7 +118,7 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
               const Icon(Icons.error_outline, color: AppColors.error, size: 48),
               const SizedBox(height: 16),
               Text(
-                'Unable to load laboratories',
+                l10n.unableToLoadLaboratories,
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium
@@ -134,7 +139,7 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
                   });
                   _loadLaboratories();
                 },
-                child: const Text('Retry'),
+                child: Text(l10n.retry),
               ),
             ],
           ),
@@ -146,12 +151,12 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
       return Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: const [
-            Icon(Iconsax.buildings, size: 60, color: AppColors.grey),
-            SizedBox(height: 12),
+          children: [
+            const Icon(Iconsax.buildings, size: 60, color: AppColors.grey),
+            const SizedBox(height: 12),
             Text(
-              'No laboratories available right now',
-              style: TextStyle(
+              l10n.noLaboratoriesAvailable,
+              style: const TextStyle(
                 color: AppColors.grey,
                 fontWeight: FontWeight.w600,
               ),
@@ -172,10 +177,10 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildSearchBar(),
+                _buildSearchBar(l10n),
                 if (filteredLaboratories.isEmpty) ...[
                   const SizedBox(height: 24),
-                  _buildEmptyResult(),
+                  _buildEmptyResult(l10n),
                 ] else
                   const SizedBox(height: 16),
               ],
@@ -185,7 +190,7 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
           final isLast = index == filteredLaboratories.length;
           return Column(
             children: [
-              _buildLabCard(lab),
+              _buildLabCard(lab, l10n),
               if (!isLast) const SizedBox(height: 12),
             ],
           );
@@ -194,11 +199,11 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
     );
   }
 
-  Widget _buildSearchBar() {
+  Widget _buildSearchBar(AppLocalizations l10n) {
     return TextField(
       controller: _searchController,
       decoration: InputDecoration(
-        hintText: 'Search laboratories...',
+        hintText: l10n.searchLaboratories,
         prefixIcon: const Icon(Iconsax.search_normal_1, color: AppColors.primary),
         suffixIcon: _query.isNotEmpty
             ? IconButton(
@@ -217,7 +222,10 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
     );
   }
 
-  Widget _buildLabCard(Map<String, dynamic> laboratory) {
+  Widget _buildLabCard(
+    Map<String, dynamic> laboratory,
+    AppLocalizations l10n,
+  ) {
     return _LaboratoryCard(
       laboratory: laboratory,
       onTap: () {
@@ -234,7 +242,7 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
     );
   }
 
-  Widget _buildEmptyResult() {
+  Widget _buildEmptyResult(AppLocalizations l10n) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -247,7 +255,7 @@ class _LaboratoriesScreenState extends State<LaboratoriesScreen> {
           const Icon(Icons.search_off, color: AppColors.grey, size: 42),
           const SizedBox(height: 8),
           Text(
-            'No laboratories match "$_query".',
+            l10n.noLaboratoriesMatchQuery(_query),
             textAlign: TextAlign.center,
             style: const TextStyle(color: AppColors.grey),
           ),
@@ -284,8 +292,10 @@ class _LaboratoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final name = laboratory['name'] as String? ?? 'Laboratory';
-    final address = laboratory['address'] as String? ?? 'Address not provided';
+    final l10n = AppLocalizations.of(context)!;
+    final name = laboratory['name'] as String? ?? l10n.laboratoryFallback;
+    final address =
+        laboratory['address'] as String? ?? l10n.addressNotProvided;
     final phone = laboratory['phone_number'] as String?;
 
     return InkWell(

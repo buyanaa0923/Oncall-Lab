@@ -3,6 +3,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:oncall_lab/core/constants/app_colors.dart';
 import 'package:oncall_lab/core/services/supabase_service.dart';
 import 'package:oncall_lab/ui/patient/laboratories_screen.dart';
+import 'package:oncall_lab/l10n/app_localizations.dart';
 
 class AllLabServicesScreen extends StatefulWidget {
   const AllLabServicesScreen({super.key});
@@ -94,10 +95,12 @@ class _AllLabServicesScreenState extends State<AllLabServicesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Laboratory Tests'),
+        title: Text(l10n.laboratoryTestsTitle),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
@@ -109,7 +112,7 @@ class _AllLabServicesScreenState extends State<AllLabServicesScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search for tests...',
+                hintText: l10n.searchTests,
                 prefixIcon: const Icon(Iconsax.search_normal, color: AppColors.grey),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
@@ -141,7 +144,9 @@ class _AllLabServicesScreenState extends State<AllLabServicesScreen> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  '${filteredServices.length} test${filteredServices.length == 1 ? '' : 's'} available',
+                  filteredServices.length == 1
+                      ? l10n.singleTestAvailable
+                      : l10n.testsAvailable(filteredServices.length),
                   style: const TextStyle(
                     fontSize: 14,
                     color: AppColors.grey,
@@ -155,14 +160,14 @@ class _AllLabServicesScreenState extends State<AllLabServicesScreen> {
 
           // Services List
           Expanded(
-            child: _buildContent(),
+            child: _buildContent(l10n),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(AppLocalizations l10n) {
     if (isLoading) {
       return const Center(
         child: CircularProgressIndicator(color: AppColors.primary),
@@ -182,9 +187,9 @@ class _AllLabServicesScreenState extends State<AllLabServicesScreen> {
                 color: AppColors.error,
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Error loading services',
-                style: TextStyle(
+              Text(
+                l10n.errorLoadingServices,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -202,7 +207,7 @@ class _AllLabServicesScreenState extends State<AllLabServicesScreen> {
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
                 ),
-                child: const Text('Retry'),
+                child: Text(l10n.retry),
               ),
             ],
           ),
@@ -225,8 +230,8 @@ class _AllLabServicesScreenState extends State<AllLabServicesScreen> {
               const SizedBox(height: 20),
               Text(
                 _searchController.text.isEmpty
-                    ? 'No services available'
-                    : 'No results found',
+                    ? l10n.noServicesAvailable
+                    : l10n.noResultsFound,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -236,8 +241,8 @@ class _AllLabServicesScreenState extends State<AllLabServicesScreen> {
               const SizedBox(height: 10),
               Text(
                 _searchController.text.isEmpty
-                    ? 'Please try again later'
-                    : 'Try searching with different keywords',
+                    ? l10n.pleaseTryAgainLater
+                    : l10n.tryDifferentKeywords,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: AppColors.grey,
@@ -259,6 +264,7 @@ class _AllLabServicesScreenState extends State<AllLabServicesScreen> {
           final service = filteredServices[index];
           return _ServiceCard(
             service: service,
+            l10n: l10n,
             onTap: () => _navigateToLaboratories(service),
           );
         },
@@ -270,10 +276,12 @@ class _AllLabServicesScreenState extends State<AllLabServicesScreen> {
 class _ServiceCard extends StatelessWidget {
   final Map<String, dynamic> service;
   final VoidCallback onTap;
+  final AppLocalizations l10n;
 
   const _ServiceCard({
     required this.service,
     required this.onTap,
+    required this.l10n,
   });
 
   @override
@@ -394,10 +402,10 @@ class _ServiceCard extends StatelessWidget {
                         color: AppColors.warning.withValues(alpha: 0.8),
                       ),
                       const SizedBox(width: 8),
-                      const Expanded(
+                      Expanded(
                         child: Text(
-                          'Preparation required',
-                          style: TextStyle(
+                          l10n.preparationRequired,
+                          style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             color: AppColors.warning,

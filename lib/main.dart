@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:oncall_lab/core/services/supabase_service.dart';
 import 'package:oncall_lab/core/constants/app_colors.dart';
 import 'package:oncall_lab/stores/auth_store.dart';
+import 'package:oncall_lab/stores/locale_store.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:oncall_lab/ui/auth/login_screen.dart';
 import 'package:oncall_lab/ui/patient/main_page.dart';
 import 'package:oncall_lab/ui/doctor/doctor_main_page.dart';
 import 'package:oncall_lab/ui/shared/splash_screen.dart';
+import 'package:oncall_lab/l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +18,7 @@ void main() async {
   // Initialize Supabase
   await SupabaseService.initialize();
   await authStore.initialize();
+  await localeStore.initialize();
 
   runApp(const OnCallLabApp());
 }
@@ -24,30 +28,44 @@ class OnCallLabApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'OnCall Lab',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.primary,
-          primary: AppColors.primary,
-        ),
-        scaffoldBackgroundColor: AppColors.scaffoldBackground,
-        textTheme: GoogleFonts.poppinsTextTheme(),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: AppColors.scaffoldBackground,
-          elevation: 0,
-          iconTheme: IconThemeData(color: AppColors.black),
-          titleTextStyle: TextStyle(
-            color: AppColors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+    return Observer(
+      builder: (_) => MaterialApp(
+        title: 'OnCall Lab',
+        debugShowCheckedModeBanner: false,
+        // Localization support
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en'), // English
+          Locale('mn'), // Mongolian
+        ],
+        locale: localeStore.currentLocale,
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: AppColors.primary,
+            primary: AppColors.primary,
+          ),
+          scaffoldBackgroundColor: AppColors.scaffoldBackground,
+          textTheme: GoogleFonts.poppinsTextTheme(),
+          appBarTheme: const AppBarTheme(
+            backgroundColor: AppColors.scaffoldBackground,
+            elevation: 0,
+            iconTheme: IconThemeData(color: AppColors.black),
+            titleTextStyle: TextStyle(
+              color: AppColors.black,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-      ),
-      home: const SplashWrapper(
-        child: AuthGate(),
+        home: const SplashWrapper(
+          child: AuthGate(),
+        ),
       ),
     );
   }

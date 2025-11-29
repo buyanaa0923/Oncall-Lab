@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:oncall_lab/core/constants/app_colors.dart';
+import 'package:oncall_lab/l10n/app_localizations.dart';
 
 class TestTypesSection extends StatefulWidget {
   const TestTypesSection({
@@ -74,6 +75,8 @@ class _TestTypesSectionState extends State<TestTypesSection> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     if (widget.testTypes.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -81,11 +84,11 @@ class _TestTypesSectionState extends State<TestTypesSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Text(
-            'Available Tests',
-            style: TextStyle(
+            l10n.availableTests,
+            style: const TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
               letterSpacing: -.5,
@@ -104,6 +107,7 @@ class _TestTypesSectionState extends State<TestTypesSection> {
             physics: const BouncingScrollPhysics(),
             itemBuilder: (context, index) {
               final test = widget.testTypes[index];
+              final price = test['price_mnt'] as int?;
               return SizedBox(
                 width: _cardWidth,
                 child: Container(
@@ -155,7 +159,9 @@ class _TestTypesSectionState extends State<TestTypesSection> {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              '${test['price_mnt']} MNT',
+                              price != null
+                                  ? l10n.priceInMNT(price)
+                                  : '',
                               style: TextStyle(
                                 fontSize: 12,
                                 color:

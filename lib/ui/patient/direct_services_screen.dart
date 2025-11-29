@@ -4,6 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:oncall_lab/core/constants/app_colors.dart';
 import 'package:oncall_lab/stores/service_store.dart';
 import 'package:oncall_lab/ui/patient/booking/direct_service_booking_screen.dart';
+import 'package:oncall_lab/l10n/app_localizations.dart';
 
 class DirectServicesScreen extends StatefulWidget {
   const DirectServicesScreen({super.key});
@@ -21,10 +22,12 @@ class _DirectServicesScreenState extends State<DirectServicesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Direct Doctor Services'),
+        title: Text(l10n.directDoctorServices),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
@@ -46,9 +49,9 @@ class _DirectServicesScreenState extends State<DirectServicesScreen> {
                     const Icon(Icons.error_outline,
                         size: 60, color: AppColors.error),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Error loading services',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    Text(
+                      l10n.errorLoadingServices,
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -59,7 +62,7 @@ class _DirectServicesScreenState extends State<DirectServicesScreen> {
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () => serviceStore.loadDirectServices(),
-                      child: const Text('Retry'),
+                      child: Text(l10n.retry),
                     ),
                   ],
                 ),
@@ -70,15 +73,15 @@ class _DirectServicesScreenState extends State<DirectServicesScreen> {
           final services = serviceStore.directServices;
 
           if (services.isEmpty) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Iconsax.health, size: 60, color: AppColors.grey),
-                  SizedBox(height: 16),
+                  const Icon(Iconsax.health, size: 60, color: AppColors.grey),
+                  const SizedBox(height: 16),
                   Text(
-                    'No services available',
-                    style: TextStyle(
+                    l10n.noServicesAvailable,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: AppColors.grey,
@@ -115,6 +118,7 @@ class _DirectServicesScreenState extends State<DirectServicesScreen> {
                   categoryType: categoryType,
                   categoryIcon: categoryIcon,
                   services: categoryServices,
+                  l10n: l10n,
                 );
               },
             ),
@@ -130,12 +134,14 @@ class _CategorySection extends StatelessWidget {
   final String categoryType;
   final String? categoryIcon;
   final List<Map<String, dynamic>> services;
+  final AppLocalizations l10n;
 
   const _CategorySection({
     required this.categoryName,
     required this.categoryType,
     required this.categoryIcon,
     required this.services,
+    required this.l10n,
   });
 
   IconData _getCategoryIcon() {
@@ -214,6 +220,7 @@ class _CategorySection extends StatelessWidget {
         ...services.map((service) => _ServiceCard(
               service: service,
               categoryColor: color,
+              l10n: l10n,
             )),
 
         const SizedBox(height: 24),
@@ -225,10 +232,12 @@ class _CategorySection extends StatelessWidget {
 class _ServiceCard extends StatelessWidget {
   final Map<String, dynamic> service;
   final Color categoryColor;
+  final AppLocalizations l10n;
 
   const _ServiceCard({
     required this.service,
     required this.categoryColor,
+    required this.l10n,
   });
 
   @override
@@ -236,6 +245,11 @@ class _ServiceCard extends StatelessWidget {
     final minPrice = service['min_price_mnt'] as int?;
     final maxPrice = service['max_price_mnt'] as int?;
     final doctorsCount = service['available_doctors_count'] as int? ?? 0;
+    final priceLabel = minPrice == null
+        ? null
+        : (maxPrice != null && minPrice != maxPrice
+            ? '${l10n.priceInMNT(minPrice)} - ${l10n.priceInMNT(maxPrice)}'
+            : l10n.priceInMNT(minPrice));
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -305,7 +319,7 @@ class _ServiceCard extends StatelessWidget {
               const SizedBox(height: 12),
               Row(
                 children: [
-                  if (minPrice != null) ...[
+                  if (priceLabel != null) ...[
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 6),
@@ -314,9 +328,7 @@ class _ServiceCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        minPrice == maxPrice
-                            ? '$minPrice MNT'
-                            : '$minPrice - $maxPrice MNT',
+                        priceLabel,
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
@@ -331,7 +343,7 @@ class _ServiceCard extends StatelessWidget {
                       Icon(Icons.person, size: 16, color: categoryColor),
                       const SizedBox(width: 4),
                       Text(
-                        '$doctorsCount ${doctorsCount == 1 ? 'doctor' : 'doctors'}',
+                        '$doctorsCount ${doctorsCount == 1 ? l10n.doctor : l10n.doctors}',
                         style: TextStyle(
                           fontSize: 13,
                           color: categoryColor,
@@ -348,7 +360,7 @@ class _ServiceCard extends StatelessWidget {
                             size: 16, color: AppColors.grey),
                         const SizedBox(width: 4),
                         Text(
-                          '~${service['estimated_duration_minutes']}min',
+                          '~${l10n.durationMinutes(service['estimated_duration_minutes'] as int)}',
                           style: const TextStyle(
                             fontSize: 13,
                             color: AppColors.grey,

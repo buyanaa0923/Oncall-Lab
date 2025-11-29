@@ -7,6 +7,7 @@ import 'package:oncall_lab/core/services/storage_service.dart';
 import 'package:oncall_lab/core/services/supabase_service.dart';
 import 'package:oncall_lab/stores/auth_store.dart';
 import 'package:oncall_lab/ui/auth/widgets/step_progress_bar.dart';
+import 'package:oncall_lab/l10n/app_localizations.dart';
 
 class PatientRegistrationScreen extends StatefulWidget {
   const PatientRegistrationScreen({super.key});
@@ -25,11 +26,6 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
     Icons.person_outline,
     Icons.security_outlined,
     Icons.home_outlined,
-  ];
-  final List<String> _stepLabels = const [
-    'Basics',
-    'Security',
-    'Address',
   ];
 
   // Controllers
@@ -126,10 +122,12 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
               file: _selectedProfilePhoto!,
             );
             if (url != null) {
+              final cacheBustedUrl =
+                  '$url?t=${DateTime.now().millisecondsSinceEpoch}';
               await supabase
                   .from('profiles')
                   .update({
-                    'avatar_url': url,
+                    'avatar_url': cacheBustedUrl,
                     'updated_at': DateTime.now().toIso8601String(),
                   })
                   .eq('id', userId);
@@ -141,13 +139,16 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
         }
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Patient account created successfully!'),
-        ),
-      );
+      if (context.mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.patientAccountCreated),
+          ),
+        );
+      }
       Navigator.of(context).pop();
-    } else if (authStore.errorMessage != null) {
+    } else if (authStore.errorMessage != null && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(authStore.errorMessage!),
@@ -159,10 +160,17 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final stepLabels = [
+      l10n.basics,
+      l10n.security,
+      l10n.address,
+    ];
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Patient Registration'),
+        title: Text(l10n.patientRegistration),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
@@ -172,25 +180,25 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Create Patient Account',
-                style: TextStyle(
+              Text(
+                l10n.createPatientAccount,
+                style: const TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
                   color: AppColors.black,
                 ),
               ),
               const SizedBox(height: 6),
-              const Text(
-                'Step-by-step onboarding for a smoother experience.',
-                style: TextStyle(color: AppColors.grey),
+              Text(
+                l10n.stepByStepOnboarding,
+                style: const TextStyle(color: AppColors.grey),
               ),
               const SizedBox(height: 24),
               StepProgressBar(
                 totalSteps: _totalSteps,
                 currentStep: _currentStep,
                 icons: _stepIcons,
-                labels: _stepLabels,
+                labels: stepLabels,
               ),
               const SizedBox(height: 12),
               Expanded(
@@ -203,7 +211,7 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
                     child: SingleChildScrollView(
                       key: ValueKey(_currentStep),
                       physics: const BouncingScrollPhysics(),
-                      child: _buildStepContent(_currentStep),
+                      child: _buildStepContent(_currentStep, l10n),
                     ),
                   ),
                 ),
@@ -221,7 +229,7 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
                           side: const BorderSide(color: AppColors.primary),
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        child: const Text('Back'),
+                        child: Text(l10n.back),
                       ),
                     ),
                   if (_currentStep > 0) const SizedBox(width: 12),
@@ -249,8 +257,8 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
                               )
                             : Text(
                                 _currentStep == _totalSteps - 1
-                                    ? 'Create Account'
-                                    : 'Continue',
+                                    ? l10n.createAccount
+                                    : l10n.continue_,
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -265,7 +273,7 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
               Center(
                 child: TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Already have an account? Sign in'),
+                  child: Text(l10n.alreadyHaveAccountSignIn),
                 ),
               ),
             ],
@@ -275,19 +283,19 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
     );
   }
 
-  Widget _buildStepContent(int step) {
+  Widget _buildStepContent(int step, AppLocalizations l10n) {
     switch (step) {
       case 0:
-        return _buildPersonalInfoStep();
+        return _buildPersonalInfoStep(l10n);
       case 1:
-        return _buildSecurityStep();
+        return _buildSecurityStep(l10n);
       case 2:
       default:
-        return _buildAddressStep();
+        return _buildAddressStep(l10n);
     }
   }
 
-  Widget _buildPersonalInfoStep() {
+  Widget _buildPersonalInfoStep(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -298,12 +306,12 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
               child: TextFormField(
                 controller: _firstNameController,
                 decoration: _buildInputDecoration(
-                  'First name *',
+                  '${l10n.firstName} *',
                   Icons.person_outline,
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Required';
+                    return l10n.required;
                   }
                   return null;
                 },
@@ -314,12 +322,12 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
               child: TextFormField(
                 controller: _lastNameController,
                 decoration: _buildInputDecoration(
-                  'Last name *',
+                  '${l10n.lastName} *',
                   Icons.person_outline,
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Required';
+                    return l10n.required;
                   }
                   return null;
                 },
@@ -332,15 +340,15 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
           controller: _phoneController,
           keyboardType: TextInputType.phone,
           decoration: _buildInputDecoration(
-            'Phone number *',
+            '${l10n.phoneNumber} *',
             Icons.phone_outlined,
-            hint: '99123456',
+            hint: l10n.phoneNumberHint,
           ),
           validator: (value) {
             final v = value?.trim() ?? '';
-            if (v.isEmpty) return 'Required';
+            if (v.isEmpty) return l10n.required;
             if (v.length != 8 || int.tryParse(v) == null) {
-              return 'Enter 8 digit number (e.g. 99123456)';
+              return l10n.enterValidPhoneNumber;
             }
             return null;
           },
@@ -350,14 +358,14 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
           controller: _emailController,
           keyboardType: TextInputType.emailAddress,
           decoration: _buildInputDecoration(
-            'Email (optional)',
+            l10n.emailOptional,
             Icons.email_outlined,
           ),
         ),
         const SizedBox(height: 16),
-        const Text(
-          'Profile photo (optional)',
-          style: TextStyle(fontWeight: FontWeight.w600),
+        Text(
+          l10n.profilePhotoOptional,
+          style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
         Row(
@@ -389,8 +397,8 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
                 icon: const Icon(Icons.upload),
                 label: Text(
                   _selectedProfilePhoto == null
-                      ? 'Upload profile photo'
-                      : 'Change photo',
+                      ? l10n.uploadProfilePhoto
+                      : l10n.changePhoto,
                 ),
               ),
             ),
@@ -400,7 +408,7 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
     );
   }
 
-  Widget _buildSecurityStep() {
+  Widget _buildSecurityStep(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -409,22 +417,27 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
           controller: _ageController,
           keyboardType: TextInputType.number,
           decoration: _buildInputDecoration(
-            'Age',
+            l10n.age,
             Icons.cake_outlined,
           ),
         ),
         const SizedBox(height: 12),
-        const Text(
-          'Gender',
-          style: TextStyle(fontWeight: FontWeight.w600),
+        Text(
+          l10n.gender,
+          style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
         Wrap(
           spacing: 12,
           children: ['male', 'female', 'other'].map((gender) {
             final isSelected = _selectedGender == gender;
+            final genderLabel = gender == 'male'
+                ? l10n.male
+                : gender == 'female'
+                    ? l10n.female
+                    : l10n.other;
             return ChoiceChip(
-              label: Text(gender[0].toUpperCase() + gender.substring(1)),
+              label: Text(genderLabel),
               selected: isSelected,
               selectedColor: AppColors.primary,
               labelStyle: TextStyle(
@@ -442,7 +455,7 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
           controller: _passwordController,
           obscureText: _obscurePassword,
           decoration: _buildInputDecoration(
-            'Password *',
+            '${l10n.password} *',
             Icons.lock_outline,
           ).copyWith(
             suffixIcon: IconButton(
@@ -459,10 +472,10 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Required';
+              return l10n.required;
             }
             if (value.length < 6) {
-              return 'Must be at least 6 characters';
+              return l10n.passwordMinLength;
             }
             return null;
           },
@@ -472,7 +485,7 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
           controller: _confirmPasswordController,
           obscureText: _obscureConfirmPassword,
           decoration: _buildInputDecoration(
-            'Confirm password *',
+            '${l10n.confirmPassword} *',
             Icons.lock_outline,
           ).copyWith(
             suffixIcon: IconButton(
@@ -490,10 +503,10 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Required';
+              return l10n.required;
             }
             if (value != _passwordController.text) {
-              return 'Passwords do not match';
+              return l10n.passwordsMustMatch;
             }
             return null;
           },
@@ -502,7 +515,7 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
     );
   }
 
-  Widget _buildAddressStep() {
+  Widget _buildAddressStep(AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -511,13 +524,13 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
           controller: _addressController,
           maxLines: 2,
           decoration: _buildInputDecoration(
-            'Permanent address *',
+            '${l10n.permanentAddress} *',
             Icons.location_on_outlined,
-            hint: 'Street, district, city',
+            hint: l10n.addressHint,
           ),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
-              return 'Required';
+              return l10n.required;
             }
             return null;
           },
@@ -529,7 +542,7 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
               child: TextFormField(
                 controller: _registrationNumberController,
                 decoration: _buildInputDecoration(
-                  'Registration number',
+                  l10n.registrationNumber,
                   Icons.badge_outlined,
                 ),
               ),
@@ -539,7 +552,7 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
               child: TextFormField(
                 controller: _passportNumberController,
                 decoration: _buildInputDecoration(
-                  'Passport number',
+                  l10n.passportNumber,
                   Icons.airplane_ticket_outlined,
                 ),
               ),
@@ -549,7 +562,7 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
         const SizedBox(height: 16),
         SwitchListTile.adaptive(
           contentPadding: EdgeInsets.zero,
-          title: const Text('Mongolian citizen'),
+          title: Text(l10n.mongolianCitizen),
           activeColor: AppColors.primary,
           value: _isMongolianCitizen,
           onChanged: (value) {
@@ -561,7 +574,7 @@ class _PatientRegistrationScreenState extends State<PatientRegistrationScreen> {
           controller: _allergiesController,
           maxLines: 2,
           decoration: _buildInputDecoration(
-            'Allergies (optional)',
+            l10n.allergiesOptional,
             Icons.health_and_safety_outlined,
           ),
         ),
