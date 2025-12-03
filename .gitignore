@@ -50,3 +50,6 @@ supabase/.temp/
 .env
 .env.*
 !.env.example
+
+# FVM Version Cache
+.fvm/
