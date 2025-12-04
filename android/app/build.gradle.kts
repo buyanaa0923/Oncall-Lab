@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.ulaanbaatar.oncalllab.oncall_lab"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "26.3.11579264"  // Use existing NDK instead of downloading new one
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
