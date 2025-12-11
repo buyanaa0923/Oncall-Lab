@@ -86,16 +86,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 Text(
                   l10n.welcomeBack,
                   style: const TextStyle(
-                    fontSize: 32,
+                    fontSize: 25,
                     fontWeight: FontWeight.bold,
                     color: AppColors.black,
                   ),
                 ),
-                const SizedBox(height: 8),
                 Text(
                   l10n.signInToContinue,
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: 12,
                     color: AppColors.grey,
                   ),
                 ),
@@ -118,34 +117,32 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 20),
                 // Password field
-                Observer(
-                  builder: (_) => AppTextField(
-                    controller: _passwordController,
-                    label: l10n.password,
-                    prefixIcon: const Icon(Icons.lock),
-                    obscureText: _obscurePassword,
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscurePassword
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _obscurePassword = !_obscurePassword;
-                        });
-                      },
+                AppTextField(
+                  controller: _passwordController,
+                  label: l10n.password,
+                  prefixIcon: const Icon(Icons.lock),
+                  obscureText: _obscurePassword,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return l10n.pleaseEnterPassword;
-                      }
-                      if (value.length < 6) {
-                        return l10n.passwordMinLength;
-                      }
-                      return null;
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
                     },
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return l10n.pleaseEnterPassword;
+                    }
+                    if (value.length < 6) {
+                      return l10n.passwordMinLength;
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 12),
                 // Forgot password
